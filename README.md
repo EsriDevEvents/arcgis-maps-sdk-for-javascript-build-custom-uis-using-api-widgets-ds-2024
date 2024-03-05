@@ -1,13 +1,7 @@
-> **Note:** Please follow the [repository conventions](https://github.com/EsriDevEvents/contributor-guides/blob/main/conventions.md#conventions-for-repositories) and [slugify](https://slugify.online/) the title of your repo
+# ArcGIS Maps SDK for JavaScript: Build Custom UIs Using API Widgets
 
-# Name of the session
-
-[Description of the session]
+The ArcGIS Maps SDK for JavaScript's widgets have a clean separation between the user interface (the "view") and the underlying business logic ("viewModel"), allowing developers to use the viewModel to create a custom experience. In this session, you will learn how you can create custom UIs using the widget viewModels. We will look at examples using viewModels to create UIs within popular web frameworks and libraries, as well as the Calcite Design System using web components.
 
 ## Slides and recording
 
 Most of the slides are made available at [Esri Events > Proceedings](https://www.esri.com/en-us/about/events/index/proceedings).
-
-## Related sessions
-
-...
