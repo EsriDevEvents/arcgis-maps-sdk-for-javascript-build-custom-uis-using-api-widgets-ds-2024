@@ -35,11 +35,14 @@ const vm = new CoordinateVM({ view, multipleConversions: false });
 const customWidget = document.createElement("div");
 customWidget.innerHTML = `
 <div class="custom-coordinate-conversion">
+  <calcite-segmented-control id="custom-coordinate-mode">
+      <calcite-segmented-control-item icon-start="selection-x" value="live" checked>Live</calcite-segmented-control-item>
+      <calcite-segmented-control-item icon-start="pin" value="capture">Capture</calcite-segmented-control-item>
+  </calcite-segmented-control>
   <calcite-select id="custom-coordinate-select"></calcite-select>
-  <calcite-inline-editable>
+  <calcite-inline-editable id="custom-coordinate-editable" controls>
       <calcite-input id="custom-coordinate-input" placeholder="Enter coordinates"></calcite-input>
   </calcite-inline-editable>
-  <calcite-button id="custom-coordinate-capture" icon-start="pin">Capture</calcite-button>
 </div>
 `;
 
@@ -47,6 +50,10 @@ view.ui.add(customWidget, "bottom-right");
 
 const coordinateSelect = document.getElementById("custom-coordinate-select");
 const coordinateInput = document.getElementById("custom-coordinate-input");
+const coordinateMode = document.getElementById("custom-coordinate-mode");
+const coordinateEditable = document.getElementById(
+  "custom-coordinate-editable"
+);
 
 updateFormats();
 updateCoordinates();
@@ -61,6 +68,33 @@ watch(
 
 coordinateSelect.addEventListener("calciteSelectChange", (event) => {
   vm.activeFormat = event.target.selectedOption.value;
+});
+
+coordinateMode.addEventListener("calciteSegmentedControlChange", (event) => {
+  const value = event.target.value;
+  vm.mode = value;
+  console.log(vm.mode);
+});
+
+async function reverseConvert() {
+  const value = coordinateInput.value;
+  const selectFormat = vm.conversions.at(0)?.format;
+  const selectIndex =
+    vm.formats.findIndex((format) => format.name === selectFormat?.name) ?? -1;
+  const format = vm.formats.getItemAt(selectIndex);
+  console.log({ format });
+  const point = await vm.reverseConvert(value, format);
+  view.goTo(point);
+}
+
+coordinateEditable.addEventListener("calciteInlineEditableEditConfirm", () => {
+  reverseConvert();
+});
+
+coordinateInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    reverseConvert();
+  }
 });
 
 function updateFormats() {
