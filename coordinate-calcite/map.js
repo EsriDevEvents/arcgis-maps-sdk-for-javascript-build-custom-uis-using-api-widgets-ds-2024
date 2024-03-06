@@ -90,7 +90,6 @@ async function reverseConvert() {
     view.goTo(point);
   } catch (e) {
     coordinateInput.status = "invalid";
-    coordinateInput.validationMessage = "Invalid coordinate";
   }
 }
 
