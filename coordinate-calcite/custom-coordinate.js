@@ -54,8 +54,7 @@ export function createCustomCoordinateConversion(view) {
   });
 
   coordinateMode.addEventListener("calciteSegmentedControlChange", (event) => {
-    const value = event.target.value;
-    vm.mode = value;
+    vm.mode = event.target.value;
   });
 
   async function reverseConvert() {
@@ -100,11 +99,12 @@ export function createCustomCoordinateConversion(view) {
       .toArray()
       .map(
         (format) =>
-          `<calcite-option ${
-            format === currentFormat ? "selected" : ""
-          } value="${format.name}">${
-            formatLookup[format.name.toLowerCase()]
-          }</calcite-option>`
+          `<calcite-option
+              ${format === currentFormat ? "selected" : ""}
+              value="${format.name}"
+            >
+            ${formatLookup[format.name.toLowerCase()]}
+           </calcite-option>`
       )
       .join("");
 
