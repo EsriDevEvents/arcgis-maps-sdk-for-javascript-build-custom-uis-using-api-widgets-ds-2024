@@ -1,0 +1,55 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>2024 Esri Developer Summit</title>
+
+  <!-- Calcite imports -->
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.6.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.6.0/calcite.css" />
+
+
+  <link el="preload" id="jsapi-mode-light" rel="stylesheet"
+    href="https://js.arcgis.com/4.29/@arcgis/core/assets/esri/themes/light/main.css" />
+  <link el="preload" disabled id="jsapi-mode-dark" rel="stylesheet"
+    href="https://js.arcgis.com/4.29/@arcgis/core/assets/esri/themes/dark/main.css" />
+
+  <script src="https://js.arcgis.com/4.29/"></script>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    .custom-coordinate-conversion {
+      display: flex;
+      flex-direction: row;
+      padding: 10px;
+      gap: 0 10px;
+      background-color: white;
+      min-width: 450px;
+    }
+
+    .custom-coordinate-conversion calcite-select {}
+
+    .custom-coordinate-conversion calcite-inline-editable {
+      flex: 1;
+    }
+  </style>
+
+
+  <!-- Our application -->
+  <script src="./map.js" type="module"></script>
+</head>
+
+<body>
+  <div id="viewDiv">
+</body>
+
+</html>
