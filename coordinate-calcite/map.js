@@ -56,12 +56,16 @@ const coordinateEditable = document.getElementById(
   "custom-coordinate-editable"
 );
 
+let activeFormat = null;
+
 watch(
-  () => [vm.formats.length, vm.conversions.getItemAt(0)?.displayCoordinate],
-  () => {
-    updateFormats();
-    updateCoordinates();
-  },
+  () => vm.conversions.getItemAt(0)?.format,
+  (format) => updateFormats(format),
+  { initial: true }
+);
+watch(
+  () => vm.conversions.getItemAt(0)?.displayCoordinate,
+  (displayCoordinate) => updateCoordinates(displayCoordinate ?? ""),
   { initial: true }
 );
 
@@ -78,16 +82,10 @@ coordinateMode.addEventListener("calciteSegmentedControlChange", (event) => {
   vm.mode = value;
 });
 
-function findFormatIndex(name) {
-  return vm.formats.findIndex((format) => format.name === name) ?? -1;
-}
-
 async function reverseConvert() {
+  coordinateEditable.editingEnabled = false;
   const value = coordinateInput.value;
-  const selectFormat = vm.conversions.at(0)?.format;
-  const selectIndex = findFormatIndex(selectFormat?.name);
-  const format = vm.formats.getItemAt(selectIndex);
-  const point = await vm.reverseConvert(value, format); // todo: catch this, add status
+  const point = await vm.reverseConvert(value, activeFormat); // todo: catch this, add status
   view.goTo(point);
 }
 
@@ -101,23 +99,22 @@ coordinateInput.addEventListener("keydown", (event) => {
   }
 });
 
-function updateFormats() {
-  const selectFormat = vm.conversions.at(0)?.format;
-  const selectIndex = findFormatIndex(selectFormat?.name);
+function updateFormats(currentFormat) {
+  activeFormat = currentFormat;
 
-  const formatsTemplate = vm.formats
+  const options = vm.formats
     .toArray()
     .map(
-      (format, index) =>
-        `<calcite-option ${index === selectIndex ? "selected" : ""} value="${
+      (format) =>
+        `<calcite-option ${format === currentFormat ? "selected" : ""} value="${
           format.name
         }">${format.label.toUpperCase()}</calcite-option>`
     )
     .join("");
 
-  coordinateSelect.innerHTML = formatsTemplate;
+  coordinateSelect.innerHTML = options;
 }
 
-function updateCoordinates() {
-  coordinateInput.value = vm.conversions.getItemAt(0)?.displayCoordinate ?? "";
+function updateCoordinates(activeDisplayCoordinate) {
+  coordinateInput.value = activeDisplayCoordinate;
 }
