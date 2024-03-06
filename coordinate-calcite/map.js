@@ -37,7 +37,7 @@ const customWidget = document.createElement("div");
 customWidget.innerHTML = `
 <div class="custom-coordinate-conversion">
   <calcite-segmented-control id="custom-coordinate-mode">
-      <calcite-segmented-control-item icon-start="selection-x" value="live" checked>Live</calcite-segmented-control-item>
+      <calcite-segmented-control-item icon-start="cursor" value="live" checked>Live</calcite-segmented-control-item>
       <calcite-segmented-control-item icon-start="pin" value="capture">Capture</calcite-segmented-control-item>
   </calcite-segmented-control>
   <calcite-select id="custom-coordinate-select"></calcite-select>
@@ -85,8 +85,13 @@ coordinateMode.addEventListener("calciteSegmentedControlChange", (event) => {
 async function reverseConvert() {
   coordinateEditable.editingEnabled = false;
   const value = coordinateInput.value;
-  const point = await vm.reverseConvert(value, activeFormat); // todo: catch this, add status
-  view.goTo(point);
+  try {
+    const point = await vm.reverseConvert(value, activeFormat);
+    view.goTo(point);
+  } catch (e) {
+    coordinateInput.status = "invalid";
+    coordinateInput.validationMessage = "Invalid coordinate";
+  }
 }
 
 coordinateEditable.addEventListener("calciteInlineEditableEditConfirm", () => {
@@ -117,4 +122,5 @@ function updateFormats(currentFormat) {
 
 function updateCoordinates(activeDisplayCoordinate) {
   coordinateInput.value = activeDisplayCoordinate;
+  coordinateInput.status = "valid";
 }
