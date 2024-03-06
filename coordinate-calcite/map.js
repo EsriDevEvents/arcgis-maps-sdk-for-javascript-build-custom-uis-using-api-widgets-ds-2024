@@ -3,7 +3,7 @@ import MapView from "https://js.arcgis.com/4.29/@arcgis/core/views/MapView.js";
 import CoordinateConversion from "https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion.js";
 
 // custom UI
-import { createCustomCoordinateConversion } from "./custom-coordinate.js";
+import { createCustomCoordinateConversion } from "./calcite-coordinate.js";
 
 // Create the map
 const map = new Map({

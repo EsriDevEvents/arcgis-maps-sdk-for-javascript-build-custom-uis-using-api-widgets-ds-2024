@@ -1,8 +1,7 @@
 html,
 body,
 #root,
-.App,
-#viewDiv {
+.App {
   padding: 0;
   margin: 0;
   height: 100%;
