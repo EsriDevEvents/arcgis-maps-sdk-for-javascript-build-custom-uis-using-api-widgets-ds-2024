@@ -1,6 +1,7 @@
 import Map from "https://js.arcgis.com/4.29/@arcgis/core/Map.js";
 import MapView from "https://js.arcgis.com/4.29/@arcgis/core/views/MapView.js";
 import CoordinateConversion from "https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion.js";
+import Conversion from "https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion/support/Conversion.js";
 import { watch } from "https://js.arcgis.com/4.29/@arcgis/core/core/reactiveUtils.js";
 
 // -----------------
@@ -24,7 +25,7 @@ const view = new MapView({
   zoom: 10,
 });
 
-const ccWidget = new CoordinateConversion({ view, multipleConversions: false });
+const ccWidget = new CoordinateConversion({ view, multipleConversions: true });
 
 view.ui.add(ccWidget, "bottom-left");
 
@@ -55,35 +56,38 @@ const coordinateEditable = document.getElementById(
   "custom-coordinate-editable"
 );
 
-updateFormats();
-updateCoordinates();
-
 watch(
   () => [vm.formats.length, vm.conversions.getItemAt(0)?.displayCoordinate],
   () => {
     updateFormats();
     updateCoordinates();
-  }
+  },
+  { initial: true }
 );
 
 coordinateSelect.addEventListener("calciteSelectChange", (event) => {
-  vm.activeFormat = event.target.selectedOption.value;
+  const value = event.target.value;
+  const format = vm.formats.find((format) => format.name === value);
+  const newConversion = new Conversion({ format });
+  vm.conversions.removeAt(0);
+  vm.conversions.add(newConversion, 0);
 });
 
 coordinateMode.addEventListener("calciteSegmentedControlChange", (event) => {
   const value = event.target.value;
   vm.mode = value;
-  console.log(vm.mode);
 });
+
+function findFormatIndex(name) {
+  return vm.formats.findIndex((format) => format.name === name) ?? -1;
+}
 
 async function reverseConvert() {
   const value = coordinateInput.value;
   const selectFormat = vm.conversions.at(0)?.format;
-  const selectIndex =
-    vm.formats.findIndex((format) => format.name === selectFormat?.name) ?? -1;
+  const selectIndex = findFormatIndex(selectFormat?.name);
   const format = vm.formats.getItemAt(selectIndex);
-  console.log({ format });
-  const point = await vm.reverseConvert(value, format);
+  const point = await vm.reverseConvert(value, format); // todo: catch this, add status
   view.goTo(point);
 }
 
@@ -98,18 +102,10 @@ coordinateInput.addEventListener("keydown", (event) => {
 });
 
 function updateFormats() {
-  // const conversionNames = vm.conversions?.map(
-  //   (conversion) => conversion.format?.name
-  // );
-
   const selectFormat = vm.conversions.at(0)?.format;
-  const selectIndex =
-    vm.formats.findIndex((format) => format.name === selectFormat?.name) ?? -1;
-
-  console.log({ selectIndex });
+  const selectIndex = findFormatIndex(selectFormat?.name);
 
   const formatsTemplate = vm.formats
-    //?.filter((format) => !conversionNames.includes(format.name))
     .toArray()
     .map(
       (format, index) =>
@@ -123,6 +119,5 @@ function updateFormats() {
 }
 
 function updateCoordinates() {
-  console.log({ vm });
   coordinateInput.value = vm.conversions.getItemAt(0)?.displayCoordinate ?? "";
 }
