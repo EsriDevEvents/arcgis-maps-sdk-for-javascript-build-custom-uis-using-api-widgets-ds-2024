@@ -1,12 +1,13 @@
 import "./App.css";
 import "@arcgis/core/assets/esri/themes/light/main.css";
 
-// import CoordinateVM from "@arcgis/core/widgets/CoordinateConversion/CoordinateConversionViewModel.js";
 import { useMapView } from "./hooks/useMapView";
 import { useCoordinateConversion } from "./hooks/useCoordinateConversion";
+import { useCoordinateConversionVM } from "./hooks/useCoordinateConversionVM";
+import FluentCoordinateConversion from "./components/FluentCoordinateConversion";
 
 function App() {
-  const { ref, mapView } = useMapView(
+  const { mapViewRef, mapView } = useMapView(
     {
       basemap: {
         portalItem: {
@@ -22,7 +23,13 @@ function App() {
 
   useCoordinateConversion(mapView);
 
-  return <div className="App" ref={ref} />;
+  const { coordinateConversionViewModel } = useCoordinateConversionVM(mapView);
+
+  return (
+    <div className="App" ref={mapViewRef}>
+      <FluentCoordinateConversion vm={coordinateConversionViewModel} />
+    </div>
+  );
 }
 
 export default App;

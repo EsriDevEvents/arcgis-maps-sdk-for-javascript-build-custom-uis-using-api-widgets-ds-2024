@@ -62,7 +62,7 @@ export function createCustomCoordinateConversion(view) {
     const value = coordinateInput.value;
     try {
       const point = await vm.reverseConvert(value, activeFormat);
-      view.goTo(point);
+      vm.view.goTo(point);
     } catch (e) {
       coordinateInput.status = "invalid";
     }

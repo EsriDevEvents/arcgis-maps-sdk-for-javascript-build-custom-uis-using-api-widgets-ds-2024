@@ -1,0 +1,15 @@
+.fluent-coordinate-conversion {
+  position: absolute;
+  bottom: 31px;
+  right: 15px;
+}
+
+.fluent-coordinate-conversion .text {
+  width: 250px;
+  text-align: right;
+}
+
+.fluent-coordinate-conversion .input {
+  width: 250px;
+  text-align: right;
+}

@@ -20,7 +20,7 @@ const destroyMapView = (view) => {
 };
 
 export function useMapView(mapProperties, mapViewProperties) {
-  const ref = useRef(null);
+  const mapViewRef = useRef(null);
 
   const [mapView, setMapView] = useState();
 
@@ -37,7 +37,7 @@ export function useMapView(mapProperties, mapViewProperties) {
         return;
       }
 
-      mapView.container = ref.current;
+      mapView.container = mapViewRef.current;
 
       setMapView(mapView);
     }
@@ -51,5 +51,5 @@ export function useMapView(mapProperties, mapViewProperties) {
     };
   }, []);
 
-  return { ref, mapView };
+  return { mapViewRef, mapView };
 }

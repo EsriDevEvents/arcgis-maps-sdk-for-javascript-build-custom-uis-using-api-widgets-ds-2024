@@ -1,35 +1,20 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect } from "react";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion.js";
 
-const destroyCoordinateConversion = (coordinateConversion) => {
-  if (!coordinateConversion) {
-    return;
-  }
-
-  coordinateConversion.destroy();
-};
-
-export function useCoordinateConversion(mapView) {
-  const ref = useRef(null);
-
-  const [coordinateConversion, setCoordinateConversion] = useState();
-
+export function useCoordinateConversion(view) {
   useEffect(() => {
-    const widget = new CoordinateConversion({ view: mapView });
+    const widget = new CoordinateConversion({ view });
 
-    if (mapView?.ui) {
-      mapView.ui.add(widget, "bottom-left");
+    if (view?.ui) {
+      view.ui.add(widget, "bottom-left");
     }
 
-    setCoordinateConversion(widget);
-
     return function cleanUp() {
-      if (mapView?.ui) {
-        mapView.ui.remove(widget);
+      if (view?.ui) {
+        view.ui.remove(widget);
       }
-      destroyCoordinateConversion(widget);
-    };
-  }, [mapView]);
 
-  return { ref, coordinateConversion };
+      widget?.destroy();
+    };
+  }, [view]);
 }
