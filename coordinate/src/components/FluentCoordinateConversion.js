@@ -9,10 +9,16 @@ import {
   MenuTrigger,
   MenuPopover,
   MenuList,
-  MenuItem,
+  MenuItemRadio,
   Text,
   Input,
   Switch,
+  useId,
+  Toaster,
+  useToastController,
+  Toast,
+  ToastTitle,
+  ToastBody,
 } from "@fluentui/react-components";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -23,21 +29,31 @@ import {
 } from "@fluentui/react-icons";
 
 import { watch } from "@arcgis/core/core/reactiveUtils.js";
+import Conversion from "@arcgis/core/widgets/CoordinateConversion/support/Conversion.js";
 
 import "./FluentCoordinateConversion.css";
 
-async function reverseConvert({ vm, value, activeFormat }) {
-  //coordinateEditable.editingEnabled = false;
-  //const value = coordinateInput.value;
-  try {
-    const point = await vm.reverseConvert(value, activeFormat);
-    vm.view.goTo(point);
-  } catch (e) {
-    //coordinateInput.status = "invalid";
-  }
-}
-
 export default function FluentCoordinateConversion({ vm }) {
+  const toasterId = useId("toaster");
+  const { dispatchToast } = useToastController(toasterId);
+  const toastError = () =>
+    dispatchToast(
+      <Toast>
+        <ToastTitle>Error</ToastTitle>
+        <ToastBody>Invalid coordinates entered.</ToastBody>
+      </Toast>,
+      { intent: "error" }
+    );
+
+  async function reverseConvert({ vm, value, activeFormat }) {
+    try {
+      const point = await vm.reverseConvert(value, activeFormat);
+      vm.view.goTo(point);
+    } catch (e) {
+      toastError();
+    }
+  }
+
   const [activeFormat, setActiveFormat] = useState();
 
   useEffect(() => {
@@ -67,27 +83,47 @@ export default function FluentCoordinateConversion({ vm }) {
     };
   }, [vm]);
 
-  console.log({ vm, reverseConvert, activeFormat });
-
-  const [checkedValues, setCheckedValues] = useState({
+  const [toolbarCheckedValues, setToolbarCheckedValues] = useState({
     editing: [],
   });
 
-  const onChange = (e, { name, checkedItems }) => {
-    setCheckedValues((s) => {
+  const onToolbarChange = (e, { name, checkedItems }) => {
+    setToolbarCheckedValues((s) => {
       return s ? { ...s, [name]: checkedItems } : { [name]: checkedItems };
     });
   };
 
-  const showEditing = checkedValues.editing.includes("edit");
+  const showEditing = toolbarCheckedValues.editing.includes("edit");
+
+  const [formatCheckedValues, setFormatCheckedValues] = useState({
+    format: [activeFormat?.name],
+  });
+
+  const onFormatChange = (e, { name, checkedItems }) => {
+    const value = checkedItems[0];
+    const format = vm.formats.find((format) => format.name === value);
+    const newConversion = new Conversion({ format });
+    vm.conversions.removeAt(0);
+    vm.conversions.add(newConversion, 0);
+
+    setFormatCheckedValues((s) => {
+      return s ? { ...s, [name]: checkedItems } : { [name]: checkedItems };
+    });
+  };
+
+  const formats = vm?.formats?.toArray().map((format) => (
+    <MenuItemRadio name="format" value={format.name} key={format.name}>
+      {format.name.toLowerCase()}
+    </MenuItemRadio>
+  ));
 
   return (
     <div className="fluent-coordinate-conversion">
       <FluentProvider theme={webDarkTheme}>
         <Toolbar
-          checkedValues={checkedValues}
+          checkedValues={toolbarCheckedValues}
           aria-label="Default"
-          onCheckedValueChange={onChange}
+          onCheckedValueChange={onToolbarChange}
         >
           <Location24Regular />
           {!showEditing ? (
@@ -96,7 +132,20 @@ export default function FluentCoordinateConversion({ vm }) {
             </Text>
           ) : null}
           {showEditing ? (
-            <Input className="input" value={activeDisplayCoordinate} />
+            <Input
+              placeholder="Enter coordinates"
+              className="input"
+              defaultValue={activeDisplayCoordinate}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  reverseConvert({
+                    vm,
+                    value: event.target.value,
+                    activeFormat,
+                  });
+                }
+              }}
+            />
           ) : null}
           <ToolbarDivider />
           <ToolbarToggleButton
@@ -113,7 +162,11 @@ export default function FluentCoordinateConversion({ vm }) {
             }}
           />
           <ToolbarDivider />
-          <Menu>
+          <Menu
+            hasCheckmarks
+            onCheckedValueChange={onFormatChange}
+            checkedValues={formatCheckedValues}
+          >
             <MenuTrigger>
               <ToolbarButton
                 aria-label="Formats"
@@ -121,15 +174,11 @@ export default function FluentCoordinateConversion({ vm }) {
               />
             </MenuTrigger>
             <MenuPopover>
-              <MenuList>
-                <MenuItem>New </MenuItem>
-                <MenuItem>New Window</MenuItem>
-                <MenuItem disabled>Open File</MenuItem>
-                <MenuItem>Open Folder</MenuItem>
-              </MenuList>
+              <MenuList>{formats}</MenuList>
             </MenuPopover>
           </Menu>
         </Toolbar>
+        <Toaster toasterId={toasterId} />
       </FluentProvider>
     </div>
   );
