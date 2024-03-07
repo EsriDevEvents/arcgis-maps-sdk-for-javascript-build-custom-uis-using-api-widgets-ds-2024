@@ -19,7 +19,7 @@ const view = new MapView({
   container: "viewDiv",
   map,
   center: [-116.545601, 33.830517],
-  zoom: 10,
+  zoom: 12,
 });
 
 const ccWidget = new CoordinateConversion({ view, multipleConversions: true });
