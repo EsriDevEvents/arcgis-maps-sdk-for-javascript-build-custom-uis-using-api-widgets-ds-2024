@@ -56,6 +56,7 @@ export default function FluentCoordinateConversion({ vm }) {
 
   const [activeFormat, setActiveFormat] = useState();
 
+  // todo: use hook
   useEffect(() => {
     const handle = watch(
       () => vm?.conversions?.getItemAt(0)?.format,
@@ -70,6 +71,7 @@ export default function FluentCoordinateConversion({ vm }) {
 
   const [activeDisplayCoordinate, setActiveDisplayCoordinate] = useState();
 
+  // todo: use hook
   useEffect(() => {
     const handle = watch(
       () => vm?.conversions?.getItemAt(0)?.displayCoordinate,
@@ -87,7 +89,7 @@ export default function FluentCoordinateConversion({ vm }) {
     editing: [],
   });
 
-  const onToolbarChange = (e, { name, checkedItems }) => {
+  const onToolbarChange = (_e, { name, checkedItems }) => {
     setToolbarCheckedValues((s) => {
       return s ? { ...s, [name]: checkedItems } : { [name]: checkedItems };
     });
@@ -99,7 +101,7 @@ export default function FluentCoordinateConversion({ vm }) {
     format: [activeFormat?.name],
   });
 
-  const onFormatChange = (e, { name, checkedItems }) => {
+  const onFormatChange = (_e, { name, checkedItems }) => {
     const value = checkedItems[0];
     const format = vm.formats.find((format) => format.name === value);
     const newConversion = new Conversion({ format });
@@ -111,12 +113,6 @@ export default function FluentCoordinateConversion({ vm }) {
     });
   };
 
-  const formats = vm?.formats?.toArray().map((format) => (
-    <MenuItemRadio name="format" value={format.name} key={format.name}>
-      {format.name.toLowerCase()}
-    </MenuItemRadio>
-  ));
-
   return (
     <div className="fluent-coordinate-conversion">
       <FluentProvider theme={webDarkTheme}>
@@ -126,11 +122,6 @@ export default function FluentCoordinateConversion({ vm }) {
           onCheckedValueChange={onToolbarChange}
         >
           <Location24Regular />
-          {!showEditing ? (
-            <Text className="text">
-              {activeDisplayCoordinate || "No position"}
-            </Text>
-          ) : null}
           {showEditing ? (
             <Input
               placeholder="Enter coordinates"
@@ -146,7 +137,11 @@ export default function FluentCoordinateConversion({ vm }) {
                 }
               }}
             />
-          ) : null}
+          ) : (
+            <Text className="text">
+              {activeDisplayCoordinate || "No position"}
+            </Text>
+          )}
           <ToolbarDivider />
           <ToolbarToggleButton
             aria-label="Edit Coordinate"
@@ -174,7 +169,17 @@ export default function FluentCoordinateConversion({ vm }) {
               />
             </MenuTrigger>
             <MenuPopover>
-              <MenuList>{formats}</MenuList>
+              <MenuList>
+                {vm?.formats?.toArray().map((format) => (
+                  <MenuItemRadio
+                    name="format"
+                    value={format.name}
+                    key={format.name}
+                  >
+                    {format.name.toLowerCase()}
+                  </MenuItemRadio>
+                ))}
+              </MenuList>
             </MenuPopover>
           </Menu>
         </Toolbar>
