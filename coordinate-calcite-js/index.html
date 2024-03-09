@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>2024 Esri Developer Summit</title>
+  <title>2024 Esri Developer Summit - CoordinateConversion custom widget with Calcite</title>
 
   <!-- Calcite imports -->
   <script type="module" src="https://js.arcgis.com/calcite-components/2.6.0/calcite.esm.js"></script>
   <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.6.0/calcite.css" />
 
-
-  <link id="jsapi-mode-light" rel="stylesheet"
-    href="https://js.arcgis.com/4.29/@arcgis/core/assets/esri/themes/light/main.css" />
-
+  <!-- ArcGIS Maps SDK for JavaScript imports -->
   <script src="https://js.arcgis.com/4.29/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script type="module" src="https://js.arcgis.com/map-components/4.29/arcgis-map-components.esm.js"></script>
 
+  <!-- Demo imports -->
+  <script src="./app.js" defer></script>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="../esri-devsummit/esri-devsummit.esm.js"></script>
   <style>
     html,
     body,
@@ -26,14 +29,98 @@
     }
   </style>
 
-
-  <!-- Our application -->
+  <!-- Custom Widget imports -->
   <script src="./map.js" type="module"></script>
   <link rel="stylesheet" href="./calcite-coordinate.css" />
 </head>
 
 <body>
-  <div id="viewDiv">
+  <calcite-shell class="calcite-mode-light">
+    <calcite-navigation slot="header" id="nav">
+      <calcite-navigation-logo href="" icon="footprint" alt="Application logo" slot="logo"
+        heading="Custom CoordinateConversion Widget with Calcite Components"
+        description="Esri Developer Summit 2024"></calcite-navigation-logo>
+      <calcite-action-pad layout="horizontal" expand-disabled slot="content-end">
+        <calcite-action id="toggle-modal" text="Widget Code Snippets" icon="code"></calcite-action>
+      </calcite-action-pad>
+      <calcite-tooltip placement="bottom" reference-element="toggle-modal" close-on-click slot="content-end">Widget Code
+        Snippets</calcite-tooltip>
+    </calcite-navigation>
+    <div id="viewDiv">
+  </calcite-shell>
+
+  <!-- Demo template interactive elements -->
+  <calcite-modal id="modal" width-scale="l" class="calcite-mode-light">
+    <div slot="header">Widget Code Snippets</div>
+    <div slot="content">
+      <calcite-accordion selection-mode="single" scale="l">
+        <calcite-accordion-item expanded heading="1. Layout" description="The layout of the application"
+          icon-start="group-layout-elements">
+          <esri-devsummit-code source=" &lt;calcite-shell&gt;
+  &lt;calcite-navigation slot=&quot;header&quot;&gt;
+    &lt;calcite-navigation-logo slot=&quot;logo&quot;&gt;
+  &lt;/calcite-navigation&gt;
+  &lt;calcite-shell-panel slot=&quot;panel-start&quot;&gt;
+    &lt;calcite-panel&gt;
+      &lt;calcite-block collapsible heading=&quot;Windmill Configuration&quot;&gt;&lt;/calcite-block&gt;
+      &lt;calcite-block collapsible heading=&quot;Windmills&quot; description=&quot;A list of displayed windmills&quot;&gt;
+        &lt;calcite-list&gt;&lt;/calcite-list&gt;
+      &lt;/calcite-block&gt;
+    &lt;/calcite-panel&gt;
+  &lt;/calcite-shell-panel&gt;
+  &lt;div id=&quot;viewDiv&quot;&gt;
+&lt;/calcite-shell&gt;"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="2. Windmill list creation" description="Generating the list using calicte-list"
+          icon-start="list">
+          <esri-devsummit-code source="const list = document.getElementById(&quot;turbine-list&quot;);
+list.innerHTML = &quot;&quot;;
+turbines.forEach((turbine) =&gt; {
+  const listItem = document.createElement(&quot;calcite-list-item&quot;);
+  const { site_name, unique_id, manufac, model, on_year } =
+    turbine.attributes;
+  listItem.label = `${site_name}: ${unique_id}`;
+  listItem.description = `${manufac} - ${model}`;
+  list.appendChild(listItem);
+});"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="3. List Item event" description="Using the list event to go to a windmill"
+          icon-start="recurrence">
+          <esri-devsummit-code source="listItem.addEventListener(&quot;calciteListItemSelect&quot;, () =&gt; {
+  view.goTo({
+      target: turbine.geometry,
+      scale: 1500,
+  });
+});"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="4. Slider event"
+          description="Watching for calcite control events to modify the map" icon-start="recurrence">
+          <esri-devsummit-code source="const windSpeedEl = document.getElementById(&quot;wind-speed&quot;);
+windSpeedEl.addEventListener(&quot;calciteSliderChange&quot;, function (event) {
+  windSpeed = event.target.value;
+  updateWindResetButton();
+  initTurbineRenderDebounced();
+});"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="5. Theming" description="Using CSS vars to theme the application"
+          icon-start="palette">
+          <esri-devsummit-code source="calcite-shell {
+  --calcite-ui-brand: #ffbe83;
+  --calcite-color-brand: #ffbe83;
+  --calcite-color-brand-hover: #ffe9d5;
+  --calcite-color-brand-press: #ffe9d5;
+}
+.calcite-mode-dark calcite-shell {
+  --calcite-ui-brand: #bcd9da;
+  --calcite-color-brand: #bcd9da;
+  --calcite-color-brand-hover: #b9d0bd;
+  --calcite-color-brand-press: #b9d0bd;
+}"></esri-devsummit-code>
+        </calcite-accordion-item>
+      </calcite-accordion>
+    </div>
+  </calcite-modal>
+
 </body>
 
 </html>

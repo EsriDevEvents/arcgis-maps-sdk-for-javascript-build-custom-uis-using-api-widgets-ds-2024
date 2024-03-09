@@ -1,0 +1,29 @@
+/* Calcite Dev Summit 2024 Demo Template */
+/* Demo template supporting styles */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+calcite-menu-item {
+  --calcite-color-foreground-1: var(--calcite-color-background);
+}
+
+calcite-navigation-logo {
+  --calcite-ui-icon-color: var(--calcite-color-brand);
+}
+
+calcite-shell-panel[slot="panel-start"] calcite-panel {
+  border-top: 0;
+}
+
+calcite-action-pad {
+  margin-inline-end: 0.5rem;
+}
+
+/* Calcite Dev Summit 2024 Demo Template */
+/* App-specific supporting styles below */
