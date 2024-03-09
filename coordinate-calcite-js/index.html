@@ -54,11 +54,100 @@
     <div slot="header">Widget Code Snippets</div>
     <div slot="content">
       <calcite-accordion selection-mode="single" scale="l">
-        <calcite-accordion-item expanded heading="1. TODO" description="TODO" icon-start="group-layout-elements">
-          <esri-devsummit-code source="TODO"></esri-devsummit-code>
+        <calcite-accordion-item heading="1. Create Calcite HTML" description="Set up the DOM using calcite-components"
+          icon-start="code">
+          <esri-devsummit-code source="export function createCustomCoordinateConversion(view) {
+  const vm = new CoordinateConversionViewModel({
+    view,
+    multipleConversions: false,
+  });
+
+  const customWidget = document.createElement(&quot;div&quot;);
+  customWidget.innerHTML = `
+    &lt;div class=&quot;custom-coordinate-conversion&quot;&gt;
+
+      &lt;calcite-segmented-control id=&quot;custom-coordinate-mode&quot;&gt;
+          &lt;calcite-segmented-control-item icon-start=&quot;cursor&quot; value=&quot;live&quot; checked&gt;Live&lt;/calcite-segmented-control-item&gt;
+          &lt;calcite-segmented-control-item icon-start=&quot;pin&quot; value=&quot;capture&quot;&gt;Capture&lt;/calcite-segmented-control-item&gt;
+      &lt;/calcite-segmented-control&gt;
+
+      &lt;calcite-select id=&quot;custom-coordinate-select&quot;&gt;&lt;/calcite-select&gt;
+
+      &lt;calcite-inline-editable id=&quot;custom-coordinate-editable&quot; controls&gt;
+          &lt;calcite-input id=&quot;custom-coordinate-input&quot; placeholder=&quot;Enter coordinates&quot;&gt;&lt;/calcite-input&gt;
+      &lt;/calcite-inline-editable&gt;
+
+    &lt;/div&gt;
+  `;
+  // ...
+}"></esri-devsummit-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="2. TODO" description="TODO" icon-start="list">
-          <esri-devsummit-code source="TODO"></esri-devsummit-code>
+        <calcite-accordion-item heading="2. Watch the ViewModel for changes and react to them"
+          description="Watching VM properties to update the DOM" icon-start="recurrence">
+          <esri-devsummit-code source="watch(
+  () =&gt; vm.conversions.getItemAt(0)?.format,
+  (format) =&gt; updateFormats(format),
+  { initial: true }
+);
+watch(
+  () =&gt; vm.conversions.getItemAt(0)?.displayCoordinate,
+  (displayCoordinate) =&gt; updateCoordinates(displayCoordinate ?? &quot;&quot;),
+  { initial: true }
+);
+
+function updateFormats(currentFormat) {
+  // ... Create the calcite-options
+  coordinateSelect.innerHTML = options;
+}
+
+function updateCoordinates(activeDisplayCoordinate) {
+  coordinateInput.value = activeDisplayCoordinate;
+  coordinateInput.status = &quot;valid&quot;;
+}"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="3. Listening to calcite components for changes"
+          description="Add event listeners for calcite components to update the ViewModel" icon-start="recurrence">
+          <esri-devsummit-code source="coordinateSelect.addEventListener(&quot;calciteSelectChange&quot;, (event) =&gt; {
+  const value = event.target.value;
+  const format = vm.formats.find((format) =&gt; format.name === value);
+  const newConversion = new Conversion({ format });
+  vm.conversions.removeAt(0);
+  vm.conversions.add(newConversion, 0);
+});
+
+coordinateMode.addEventListener(&quot;calciteSegmentedControlChange&quot;, (event) =&gt; {
+  vm.mode = event.target.value;
+});"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="4. Capturing a point"
+          description="Calling a ViewModel method and navigating to the returned point" icon-start="pin">
+          <esri-devsummit-code source="  async function reverseConvert() {
+    coordinateEditable.editingEnabled = false;
+    const value = coordinateInput.value;
+    try {
+      const point = await vm.reverseConvert(value, activeFormat);
+      vm.view.goTo(point);
+    } catch (e) {
+      coordinateInput.status = &quot;invalid&quot;;
+    }
+  }
+
+  coordinateEditable.addEventListener(
+    &quot;calciteInlineEditableEditConfirm&quot;,
+    () =&gt; {
+      reverseConvert();
+    }
+  );"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="5. Applying some CSS" description="A small bit of CSS" icon-start="palette">
+          <esri-devsummit-code source=".custom-coordinate-conversion {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+  background-color: white;
+  min-width: 350px;
+}"></esri-devsummit-code>
         </calcite-accordion-item>
       </calcite-accordion>
     </div>

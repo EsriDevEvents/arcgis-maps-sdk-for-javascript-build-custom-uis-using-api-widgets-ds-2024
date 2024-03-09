@@ -1,9 +1,12 @@
-import CoordinateVM from "https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion/CoordinateConversionViewModel.js";
+import CoordinateConversionViewModel from "https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion/CoordinateConversionViewModel.js";
 import Conversion from "https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion/support/Conversion.js";
 import { watch } from "https://js.arcgis.com/4.29/@arcgis/core/core/reactiveUtils.js";
 
 export function createCustomCoordinateConversion(view) {
-  const vm = new CoordinateVM({ view, multipleConversions: false });
+  const vm = new CoordinateConversionViewModel({
+    view,
+    multipleConversions: false,
+  });
 
   const customWidget = document.createElement("div");
   customWidget.innerHTML = `
