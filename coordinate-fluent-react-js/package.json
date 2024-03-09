@@ -2,6 +2,7 @@
   "name": "coordinate",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@arcgis/core": "^4.29.5",
     "@fluentui/react-components": "^9.46.7",
