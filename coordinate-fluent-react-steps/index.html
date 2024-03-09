@@ -1,0 +1,62 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>2024 Esri Developer Summit - CoordinateConversion Component with React and Fluent 2</title>
+
+  <!-- Calcite imports -->
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.6.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.6.0/calcite.css" />
+
+  <!-- Demo imports -->
+  <script src="./app.js" defer></script>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="../esri-devsummit/esri-devsummit.esm.js"></script>
+  <style>
+    html,
+    body,
+    #iframe {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      border: none;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <calcite-shell class="calcite-mode-light">
+    <calcite-navigation slot="header" id="nav">
+      <calcite-navigation-logo href="" icon="footprint" alt="Application logo" slot="logo"
+        heading="CoordinateConversion Component with React and Fluent 2"
+        description="Esri Developer Summit 2024"></calcite-navigation-logo>
+      <calcite-action-pad layout="horizontal" expand-disabled slot="content-end">
+        <calcite-action id="toggle-modal" text="Widget Code Snippets" icon="code"></calcite-action>
+      </calcite-action-pad>
+      <calcite-tooltip placement="bottom" reference-element="toggle-modal" close-on-click slot="content-end">Widget Code
+        Snippets</calcite-tooltip>
+    </calcite-navigation>
+    <iframe id="iframe" src="http://localhost:3000"></iframe>
+  </calcite-shell>
+
+  <!-- Demo template interactive elements -->
+  <calcite-modal id="modal" width-scale="l" class="calcite-mode-light">
+    <div slot="header">Widget Code Snippets</div>
+    <div slot="content">
+      <calcite-accordion selection-mode="single" scale="l">
+        <calcite-accordion-item expanded heading="1. TODO" description="TODO" icon-start="group-layout-elements">
+          <esri-devsummit-code source="TODO"></esri-devsummit-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="2. TODO" description="TODO" icon-start="list">
+          <esri-devsummit-code source="TODO"></esri-devsummit-code>
+        </calcite-accordion-item>
+      </calcite-accordion>
+    </div>
+  </calcite-modal>
+
+</body>
+
+</html>
