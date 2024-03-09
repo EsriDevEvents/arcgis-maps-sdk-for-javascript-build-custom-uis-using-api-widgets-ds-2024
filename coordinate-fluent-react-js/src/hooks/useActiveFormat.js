@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { watch } from "@arcgis/core/core/reactiveUtils.js";
+import { watch } from "@arcgis/core/core/reactiveUtils";
 
 export function useActiveFormat(vm) {
   const [activeFormat, setActiveFormat] = useState();

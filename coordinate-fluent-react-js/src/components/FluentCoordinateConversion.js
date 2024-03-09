@@ -27,7 +27,7 @@ import {
   Settings24Regular,
   Location24Regular,
 } from "@fluentui/react-icons";
-import Conversion from "@arcgis/core/widgets/CoordinateConversion/support/Conversion.js";
+import Conversion from "@arcgis/core/widgets/CoordinateConversion/support/Conversion";
 import { useActiveFormat } from "../hooks/useActiveFormat";
 import { useActiveDisplayCoordinate } from "../hooks/useActiveDisplayCoordinate";
 import "./FluentCoordinateConversion.css";

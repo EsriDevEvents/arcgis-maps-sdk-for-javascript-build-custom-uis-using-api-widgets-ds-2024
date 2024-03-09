@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CoordinateVM from "@arcgis/core/widgets/CoordinateConversion/CoordinateConversionViewModel.js";
+import CoordinateVM from "@arcgis/core/widgets/CoordinateConversion/CoordinateConversionViewModel";
 
 export function useCoordinateConversionVM(mapView) {
   const [coordinateConversionViewModel, setVM] = useState();

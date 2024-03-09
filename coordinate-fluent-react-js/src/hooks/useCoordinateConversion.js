@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion.js";
+import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 
 export function useCoordinateConversion(view) {
   useEffect(() => {
