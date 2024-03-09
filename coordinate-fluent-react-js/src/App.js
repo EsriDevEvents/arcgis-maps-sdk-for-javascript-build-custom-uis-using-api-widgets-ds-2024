@@ -2,9 +2,11 @@ import "./App.css";
 import "@arcgis/core/assets/esri/themes/light/main.css";
 
 import { useMapView } from "./hooks/useMapView";
-import { useCoordinateConversion } from "./hooks/useCoordinateConversion";
 import { useCoordinateConversionVM } from "./hooks/useCoordinateConversionVM";
 import FluentCoordinateConversion from "./components/FluentCoordinateConversion";
+
+// default coordinate conversion widget
+import { useCoordinateConversion } from "./hooks/useCoordinateConversion";
 
 function App() {
   const { mapViewRef, mapView } = useMapView(
@@ -21,7 +23,7 @@ function App() {
     }
   );
 
-  useCoordinateConversion(mapView);
+  useCoordinateConversion(mapView); // setup default coordinate conversion widget
 
   const { coordinateConversionViewModel } = useCoordinateConversionVM(mapView);
 

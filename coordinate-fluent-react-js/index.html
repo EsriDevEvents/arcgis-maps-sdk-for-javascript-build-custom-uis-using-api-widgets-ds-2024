@@ -48,10 +48,206 @@
     <div slot="content">
       <calcite-accordion selection-mode="single" scale="l">
         <calcite-accordion-item expanded heading="1. TODO" description="TODO" icon-start="group-layout-elements">
-          <esri-demo-code language="js" source="TODO"></esri-demo-code>
+          <esri-demo-code language="jsx" source="import &quot;@arcgis/core/assets/esri/themes/light/main.css&quot;;
+
+import { useMapView } from &quot;./hooks/useMapView&quot;;
+import { useCoordinateConversionVM } from &quot;./hooks/useCoordinateConversionVM&quot;;
+import FluentCoordinateConversion from &quot;./components/FluentCoordinateConversion&quot;;
+
+function App() {
+  const { mapViewRef, mapView } = useMapView(
+    {
+      basemap: {
+        portalItem: {
+          id: &quot;826498a48bd0424f9c9315214f2165d4&quot;, // Colored Pencil basemap,
+        },
+      },
+    },
+    {
+      center: [-116.545601, 33.830517],
+      zoom: 12,
+    }
+  );
+
+  const { coordinateConversionViewModel } = useCoordinateConversionVM(mapView);
+
+  return (
+    &lt;div className=&quot;App&quot; ref={mapViewRef}&gt;
+      &lt;FluentCoordinateConversion vm={coordinateConversionViewModel} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;"></esri-demo-code>
         </calcite-accordion-item>
         <calcite-accordion-item heading="2. TODO" description="TODO" icon-start="list">
-          <esri-demo-code language="js" source="TODO"></esri-demo-code>
+          <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
+import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
+
+export function useActiveDisplayCoordinate(vm) {
+  const [activeDisplayCoordinate, setActiveDisplayCoordinate] = useState();
+
+  useEffect(() =&gt; {
+    const handle = watch(
+      () =&gt; vm?.conversions?.getItemAt(0)?.displayCoordinate,
+      (displayCoordinate) =&gt;
+        setActiveDisplayCoordinate(displayCoordinate ?? &quot;&quot;),
+      { initial: true }
+    );
+
+    return function cleanUp() {
+      handle?.remove();
+    };
+  }, [vm]);
+
+  return { activeDisplayCoordinate };
+}
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="3. TODO" description="TODO" icon-start="list">
+          <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
+import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
+
+export function useActiveFormat(vm) {
+  const [activeFormat, setActiveFormat] = useState();
+
+  useEffect(() =&gt; {
+    const handle = watch(
+      () =&gt; vm?.conversions?.getItemAt(0)?.format,
+      (format) =&gt; setActiveFormat(format),
+      { initial: true }
+    );
+
+    return function cleanUp() {
+      handle?.remove();
+    };
+  }, [vm]);
+
+  return { activeFormat };
+}
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="4. TODO" description="TODO" icon-start="list">
+          <esri-demo-code language="jsx" source="import { FluentProvider, Input, Menu /*...*/} from &quot;@fluentui/react-components&quot;;
+import * as React from &quot;react&quot;;
+import { useState } from &quot;react&quot;;
+import { Edit24Regular, Settings24Regular, Location24Regular, } from &quot;@fluentui/react-icons&quot;;
+import Conversion from &quot;@arcgis/core/widgets/CoordinateConversion/support/Conversion&quot;;
+
+export default function FluentCoordinateConversion({ vm }) {
+  const { activeFormat } = useActiveFormat(vm);
+  const { activeDisplayCoordinate } = useActiveDisplayCoordinate(vm);
+  // ...
+  const inputNode = (
+    &lt;Input
+      placeholder=&quot;Enter coordinates&quot;
+      className=&quot;input&quot;
+      defaultValue={activeDisplayCoordinate}
+      onKeyDown={(event) =&gt; {
+        if (event.key === &quot;Enter&quot;) {
+          reverseConvert({
+            vm,
+            value: event.target.value,
+            activeFormat,
+          });
+        }
+      }}
+    /&gt;
+  );
+
+  const textNode = (
+    &lt;Text className=&quot;text&quot;&gt;{activeDisplayCoordinate || &quot;No position&quot;}&lt;/Text&gt;
+  );
+
+  const menuListNode = (
+    &lt;MenuList&gt;
+      {vm?.formats?.toArray().map((format) =&gt; (
+        &lt;MenuItemRadio name=&quot;format&quot; value={format.name} key={format.name}&gt;
+          {format.name.toLowerCase()}
+        &lt;/MenuItemRadio&gt;
+      ))}
+    &lt;/MenuList&gt;
+  );
+
+  const menuTriggerNode = (
+    &lt;MenuTrigger&gt;
+      &lt;ToolbarButton aria-label=&quot;Formats&quot; icon={&lt;Settings24Regular /&gt;} /&gt;
+    &lt;/MenuTrigger&gt;
+  );
+
+  return (
+    &lt;div className=&quot;fluent-coordinate-conversion&quot;&gt;
+      &lt;FluentProvider theme={webDarkTheme}&gt;
+        &lt;Toolbar
+          checkedValues={toolbarCheckedValues}
+          aria-label=&quot;Default&quot;
+          onCheckedValueChange={onToolbarChange}
+        &gt;
+          &lt;Switch
+            label=&quot;Capture&quot;
+            onChange={(_event, data) =&gt; {
+              vm.mode = data.checked ? &quot;capture&quot; : &quot;live&quot;;
+            }}
+          /&gt;
+          &lt;ToolbarDivider /&gt;
+          &lt;Location24Regular /&gt;
+          {showEditing ? inputNode : textNode}
+          &lt;ToolbarToggleButton
+            aria-label=&quot;Edit Coordinate&quot;
+            name=&quot;editing&quot;
+            value=&quot;edit&quot;
+            icon={&lt;Edit24Regular /&gt;}
+          /&gt;
+          &lt;ToolbarDivider /&gt;
+          &lt;Menu
+            hasCheckmarks
+            onCheckedValueChange={onFormatChange}
+            checkedValues={formatCheckedValues}
+          &gt;
+            {menuTriggerNode}
+            &lt;MenuPopover&gt;{menuListNode}&lt;/MenuPopover&gt;
+          &lt;/Menu&gt;
+        &lt;/Toolbar&gt;
+        &lt;Toaster toasterId={toasterId} /&gt;
+      &lt;/FluentProvider&gt;
+    &lt;/div&gt;
+  );
+}"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="6. TODO" description="TODO" icon-start="list">
+          <esri-demo-code language="jsx" source=" async function reverseConvert({ vm, value, activeFormat }) {
+  try {
+    const point = await vm.reverseConvert(value, activeFormat);
+    vm.view.goTo(point);
+  } catch (e) {
+    toastError();
+  }
+}
+
+const toasterId = useId(&quot;toaster&quot;);
+const { dispatchToast } = useToastController(toasterId);
+
+const toastError = () =&gt;
+  dispatchToast(
+    &lt;Toast&gt;
+      &lt;ToastTitle&gt;Error&lt;/ToastTitle&gt;
+      &lt;ToastBody&gt;Invalid coordinates entered.&lt;/ToastBody&gt;
+    &lt;/Toast&gt;,
+    { intent: &quot;error&quot; }
+  );"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="7. TODO" description="TODO" icon-start="list">
+          <esri-demo-code language="css" source=".fluent-coordinate-conversion {
+  position: absolute;
+  bottom: 31px;
+  right: 15px;
+}
+
+.fluent-coordinate-conversion .text,
+.fluent-coordinate-conversion .input {
+  width: 250px;
+}
+"></esri-demo-code>
         </calcite-accordion-item>
       </calcite-accordion>
     </div>
