@@ -25,5 +25,11 @@ calcite-action-pad {
   margin-inline-end: 0.5rem;
 }
 
+esri-devsummit-code {
+  margin: 15px 0;
+  font-size: 18px;
+  line-height: 24px;
+}
+
 /* Calcite Dev Summit 2024 Demo Template */
 /* App-specific supporting styles below */
