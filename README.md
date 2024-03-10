@@ -5,3 +5,9 @@ The ArcGIS Maps SDK for JavaScript's widgets have a clean separation between the
 ## Slides and recording
 
 Most of the slides are made available at [Esri Events > Proceedings](https://www.esri.com/en-us/about/events/index/proceedings).
+
+## Demos
+
+https://esridevevents.github.io/2024-arcgis-maps-sdk-for-javascript-build-custom-uis-using-api-widgets/coordinate-calcite-js/
+
+https://esridevevents.github.io/2024-arcgis-maps-sdk-for-javascript-build-custom-uis-using-api-widgets/coordinate-fluent-react-js/
