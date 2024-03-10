@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcoordinate=self.webpackChunkcoordinate||[]).push([[3263],{83263:(e,a,c)=>{c.r(a),c.d(a,{build:()=>r.b});c(42451),c(21390),c(64839),c(32307),c(66470);var r=c(26741)}}]);

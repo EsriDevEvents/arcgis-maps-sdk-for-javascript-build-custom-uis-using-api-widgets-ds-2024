@@ -1,0 +1,2 @@
+/*! For license information please see 2111.abcc0e2e.chunk.js.LICENSE.txt */
+"use strict";(self.webpackChunkcoordinate=self.webpackChunkcoordinate||[]).push([[2111],{92111:(e,t,c)=>{c.r(t),c.d(t,{CalciteAction:()=>o,defineCustomElement:()=>s});var n=c(48897);const o=n.A,s=n.d}}]);
