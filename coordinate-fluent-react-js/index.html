@@ -47,7 +47,9 @@
     <div slot="header">Widget Code Snippets</div>
     <div slot="content">
       <calcite-accordion selection-mode="single" scale="l">
-        <calcite-accordion-item expanded heading="1. TODO" description="TODO" icon-start="group-layout-elements">
+        <calcite-accordion-item heading="1. React App"
+          description="Creating the map and react component to handle the new widget" icon-start="apps">
+          <a href="https://create-react-app.dev/" target="_blank">Create React App</a>
           <esri-demo-code language="jsx" source="import &quot;@arcgis/core/assets/esri/themes/light/main.css&quot;;
 
 import { useMapView } from &quot;./hooks/useMapView&quot;;
@@ -80,7 +82,8 @@ function App() {
 
 export default App;"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="2. TODO" description="TODO" icon-start="list">
+        <calcite-accordion-item heading="2. React hook for the coordinate"
+          description="Adding a hook to manage the state of the displayCoordinate" icon-start="webhook">
           <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
 import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
 
@@ -104,7 +107,8 @@ export function useActiveDisplayCoordinate(vm) {
 }
 "></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="3. TODO" description="TODO" icon-start="list">
+        <calcite-accordion-item heading="3. React hook for the formats"
+          description="Adding a hook to manage the state of the coordinate formats" icon-start="webhook">
           <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
 import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
 
@@ -127,7 +131,11 @@ export function useActiveFormat(vm) {
 }
 "></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="4. TODO" description="TODO" icon-start="list">
+        <calcite-accordion-item heading="4. Add a React component using Fluent UI components"
+          description="Using the Fluent 2 Design System components to build a unique UI" icon-start="code">
+          <a href="https://fluent2.microsoft.design/components/web/react" target="_blank">Fluent UI</a> | <a
+            href="https://react.fluentui.dev/?path=/docs/components-toolbar--default" target="_blank">Fluent UI Toolbar
+            Demo</a>
           <esri-demo-code language="jsx" source="import { FluentProvider, Input, Menu /*...*/} from &quot;@fluentui/react-components&quot;;
 import * as React from &quot;react&quot;;
 import { useState } from &quot;react&quot;;
@@ -177,7 +185,7 @@ export default function FluentCoordinateConversion({ vm }) {
 
   return (
     &lt;div className=&quot;fluent-coordinate-conversion&quot;&gt;
-      &lt;FluentProvider theme={webDarkTheme}&gt;
+      &lt;FluentProvider theme={teamsDarkTheme}&gt;
         &lt;Toolbar
           checkedValues={toolbarCheckedValues}
           aria-label=&quot;Default&quot;
@@ -214,7 +222,8 @@ export default function FluentCoordinateConversion({ vm }) {
   );
 }"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="6. TODO" description="TODO" icon-start="list">
+        <calcite-accordion-item heading="6. Using the capture mode to convert a point to a locaation"
+          description="Using the input and toast components to handle the capture method" icon-start="image-pin">
           <esri-demo-code language="jsx" source=" async function reverseConvert({ vm, value, activeFormat }) {
   try {
     const point = await vm.reverseConvert(value, activeFormat);
@@ -236,7 +245,8 @@ const toastError = () =&gt;
     { intent: &quot;error&quot; }
   );"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="7. TODO" description="TODO" icon-start="list">
+        <calcite-accordion-item heading="7. Fluent component styles"
+          description="Adding basic styles for the Fluent component" icon-start="palette">
           <esri-demo-code language="css" source=".fluent-coordinate-conversion {
   position: absolute;
   bottom: 31px;

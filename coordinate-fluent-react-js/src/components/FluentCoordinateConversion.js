@@ -18,7 +18,7 @@ import {
   ToolbarToggleButton,
   useId,
   useToastController,
-  webDarkTheme,
+  teamsDarkTheme,
 } from "@fluentui/react-components";
 import * as React from "react";
 import { useState } from "react";
@@ -124,7 +124,7 @@ export default function FluentCoordinateConversion({ vm }) {
 
   return (
     <div className="fluent-coordinate-conversion">
-      <FluentProvider theme={webDarkTheme}>
+      <FluentProvider theme={teamsDarkTheme}>
         <Toolbar
           checkedValues={toolbarCheckedValues}
           aria-label="Default"
