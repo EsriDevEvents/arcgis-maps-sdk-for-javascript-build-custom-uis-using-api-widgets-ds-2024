@@ -85,8 +85,8 @@ function App() {
 
 export default App;"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="2. React hook for the active display coordinate"
-          description="Adding a hook to manage the state of the displayCoordinate. Same kind of hook is created for formats"
+        <calcite-accordion-item heading="2. React hooks handling state changes"
+          description="Adding hooks to manage the state of the displayCoordinate. Same kind of hook is created for formats"
           icon-start="webhook">
           <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
 import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
@@ -111,11 +111,14 @@ export function useActiveDisplayCoordinate(vm) {
 }
 "></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="3. Add a React component using Fluent UI components"
+        <calcite-accordion-item heading="3. Add a React component using Fluent UI React components"
           description="Using the Fluent 2 Design System components to build a unique UI" icon-start="code">
           <a href="https://fluent2.microsoft.design/components/web/react" target="_blank">Fluent UI</a> | <a
-            href="https://react.fluentui.dev/?path=/docs/components-toolbar--default" target="_blank">Fluent UI Toolbar
-            Demo</a>
+            href="https://react.fluentui.dev/?path=/docs/components-toolbar--default" target="_blank">Toolbar</a> | <a
+            href="https://react.fluentui.dev/?path=/docs/components-switch--default">Switch</a> | <a
+            href="https://react.fluentui.dev/?path=/docs/components-input--default">Input</a> | <a
+            href="https://react.fluentui.dev/?path=/docs/components-menu-menu--default">Menu</a> | <a
+            href="https://react.fluentui.dev/?path=/docs/components-toast--default">Toast</a>
           <esri-demo-code language="jsx" source="import { FluentProvider, Input, Menu /*...*/} from &quot;@fluentui/react-components&quot;;
 import * as React from &quot;react&quot;;
 import { useState } from &quot;react&quot;;
