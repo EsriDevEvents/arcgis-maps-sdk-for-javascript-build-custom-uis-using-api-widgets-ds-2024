@@ -29,6 +29,8 @@ esri-demo-code {
   margin: 15px 0;
   font-size: 18px;
   line-height: 24px;
+  border: 1px solid var(--calcite-color-border-2);
+  padding: 15px;
 }
 
 /* Calcite Dev Summit 2024 Demo Template */
