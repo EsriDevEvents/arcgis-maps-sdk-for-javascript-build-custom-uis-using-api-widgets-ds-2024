@@ -52,8 +52,11 @@
           <a href="https://create-react-app.dev/" target="_blank">Create React App</a>
           <esri-demo-code language="jsx" source="import &quot;@arcgis/core/assets/esri/themes/light/main.css&quot;;
 
+// hooks to store state of map and coordinateConversionViewModel
 import { useMapView } from &quot;./hooks/useMapView&quot;;
 import { useCoordinateConversionVM } from &quot;./hooks/useCoordinateConversionVM&quot;;
+
+// component to handle the Fluent UI coordinate conversion
 import FluentCoordinateConversion from &quot;./components/FluentCoordinateConversion&quot;;
 
 function App() {
@@ -82,8 +85,9 @@ function App() {
 
 export default App;"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="2. React hook for the coordinate"
-          description="Adding a hook to manage the state of the displayCoordinate" icon-start="webhook">
+        <calcite-accordion-item heading="2. React hook for the active display coordinate"
+          description="Adding a hook to manage the state of the displayCoordinate. Same kind of hook is created for formats"
+          icon-start="webhook">
           <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
 import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
 
@@ -107,31 +111,7 @@ export function useActiveDisplayCoordinate(vm) {
 }
 "></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="3. React hook for the formats"
-          description="Adding a hook to manage the state of the coordinate formats" icon-start="webhook">
-          <esri-demo-code language="jsx" source="import { useEffect, useState } from &quot;react&quot;;
-import { watch } from &quot;@arcgis/core/core/reactiveUtils&quot;;
-
-export function useActiveFormat(vm) {
-  const [activeFormat, setActiveFormat] = useState();
-
-  useEffect(() =&gt; {
-    const handle = watch(
-      () =&gt; vm?.conversions?.getItemAt(0)?.format,
-      (format) =&gt; setActiveFormat(format),
-      { initial: true }
-    );
-
-    return function cleanUp() {
-      handle?.remove();
-    };
-  }, [vm]);
-
-  return { activeFormat };
-}
-"></esri-demo-code>
-        </calcite-accordion-item>
-        <calcite-accordion-item heading="4. Add a React component using Fluent UI components"
+        <calcite-accordion-item heading="3. Add a React component using Fluent UI components"
           description="Using the Fluent 2 Design System components to build a unique UI" icon-start="code">
           <a href="https://fluent2.microsoft.design/components/web/react" target="_blank">Fluent UI</a> | <a
             href="https://react.fluentui.dev/?path=/docs/components-toolbar--default" target="_blank">Fluent UI Toolbar
@@ -145,7 +125,10 @@ import Conversion from &quot;@arcgis/core/widgets/CoordinateConversion/support/C
 export default function FluentCoordinateConversion({ vm }) {
   const { activeFormat } = useActiveFormat(vm);
   const { activeDisplayCoordinate } = useActiveDisplayCoordinate(vm);
+
   // ...
+
+  // create virtual dom nodes for the input, text, and menu components
   const inputNode = (
     &lt;Input
       placeholder=&quot;Enter coordinates&quot;
@@ -185,6 +168,7 @@ export default function FluentCoordinateConversion({ vm }) {
 
   return (
     &lt;div className=&quot;fluent-coordinate-conversion&quot;&gt;
+      // fluent provider wraps the components and allows theming/styling
       &lt;FluentProvider theme={teamsDarkTheme}&gt;
         &lt;Toolbar
           checkedValues={toolbarCheckedValues}
@@ -198,8 +182,8 @@ export default function FluentCoordinateConversion({ vm }) {
             }}
           /&gt;
           &lt;ToolbarDivider /&gt;
-          &lt;Location24Regular /&gt;
-          {showEditing ? inputNode : textNode}
+          &lt;Location24Regular /&gt; // map pin icon
+          {showEditing ? inputNode : textNode} // conditionally render nodes
           &lt;ToolbarToggleButton
             aria-label=&quot;Edit Coordinate&quot;
             name=&quot;editing&quot;
@@ -216,13 +200,13 @@ export default function FluentCoordinateConversion({ vm }) {
             &lt;MenuPopover&gt;{menuListNode}&lt;/MenuPopover&gt;
           &lt;/Menu&gt;
         &lt;/Toolbar&gt;
-        &lt;Toaster toasterId={toasterId} /&gt;
+        &lt;Toaster toasterId={toasterId} /&gt; // pops up toast notifications
       &lt;/FluentProvider&gt;
     &lt;/div&gt;
   );
 }"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="6. Using the capture mode to convert a point to a locaation"
+        <calcite-accordion-item heading="4. Using the capture mode to convert a point to a locaation"
           description="Using the input and toast components to handle the capture method" icon-start="image-pin">
           <esri-demo-code language="jsx" source=" async function reverseConvert({ vm, value, activeFormat }) {
   try {
@@ -245,7 +229,7 @@ const toastError = () =&gt;
     { intent: &quot;error&quot; }
   );"></esri-demo-code>
         </calcite-accordion-item>
-        <calcite-accordion-item heading="7. Fluent component styles"
+        <calcite-accordion-item heading="5. Fluent component styles"
           description="Adding basic styles for the Fluent component" icon-start="palette">
           <esri-demo-code language="css" source=".fluent-coordinate-conversion {
   position: absolute;

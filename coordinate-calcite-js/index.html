@@ -56,7 +56,9 @@
       <calcite-accordion selection-mode="single" scale="l">
         <calcite-accordion-item heading="1. Create Calcite HTML" description="Set up the DOM using calcite-components"
           icon-start="code">
-          <esri-demo-code source="export function createCustomCoordinateConversion(view) {
+          <esri-demo-code language="js" source="export function createCustomCoordinateConversion(view) {
+
+  // Create the ViewModel
   const vm = new CoordinateConversionViewModel({
     view,
     multipleConversions: false,
@@ -84,7 +86,9 @@
         </calcite-accordion-item>
         <calcite-accordion-item heading="2. Watch the ViewModel for changes and react to them"
           description="Watching VM properties to update the DOM" icon-start="recurrence">
-          <esri-demo-code language="js" source="watch(
+          <esri-demo-code language="js" source="import { watch } from &quot;https://js.arcgis.com/4.29/@arcgis/core/core/reactiveUtils.js&quot;;
+
+watch(
   () =&gt; vm.conversions.getItemAt(0)?.format,
   (format) =&gt; updateFormats(format),
   { initial: true }
@@ -107,7 +111,9 @@ function updateCoordinates(activeDisplayCoordinate) {
         </calcite-accordion-item>
         <calcite-accordion-item heading="3. Listening to calcite components for changes"
           description="Add event listeners for calcite components to update the ViewModel" icon-start="recurrence">
-          <esri-demo-code language="js" source="coordinateSelect.addEventListener(&quot;calciteSelectChange&quot;, (event) =&gt; {
+          <esri-demo-code language="js" source="import Conversion from &quot;https://js.arcgis.com/4.29/@arcgis/core/widgets/CoordinateConversion/support/Conversion.js&quot;;
+
+coordinateSelect.addEventListener(&quot;calciteSelectChange&quot;, (event) =&gt; {
   const value = event.target.value;
   const format = vm.formats.find((format) =&gt; format.name === value);
   const newConversion = new Conversion({ format });
@@ -121,23 +127,23 @@ coordinateMode.addEventListener(&quot;calciteSegmentedControlChange&quot;, (even
         </calcite-accordion-item>
         <calcite-accordion-item heading="4. Capturing a point"
           description="Calling a ViewModel method and navigating to the returned point" icon-start="pin">
-          <esri-demo-code language="js" source="  async function reverseConvert() {
-    coordinateEditable.editingEnabled = false;
-    const value = coordinateInput.value;
-    try {
-      const point = await vm.reverseConvert(value, activeFormat);
-      vm.view.goTo(point);
-    } catch (e) {
-      coordinateInput.status = &quot;invalid&quot;;
-    }
+          <esri-demo-code language="js" source="coordinateEditable.addEventListener(
+  &quot;calciteInlineEditableEditConfirm&quot;,
+  () =&gt; {
+    reverseConvert();
   }
+);
 
-  coordinateEditable.addEventListener(
-    &quot;calciteInlineEditableEditConfirm&quot;,
-    () =&gt; {
-      reverseConvert();
-    }
-  );"></esri-demo-code>
+async function reverseConvert() {
+  coordinateEditable.editingEnabled = false;
+  const value = coordinateInput.value;
+  try {
+    const point = await vm.reverseConvert(value, activeFormat);
+    vm.view.goTo(point);
+  } catch (e) {
+    coordinateInput.status = &quot;invalid&quot;;
+  }
+}"></esri-demo-code>
         </calcite-accordion-item>
         <calcite-accordion-item heading="5. Applying some CSS" description="A small bit of CSS" icon-start="palette">
           <esri-demo-code language="css" source=".custom-coordinate-conversion {
