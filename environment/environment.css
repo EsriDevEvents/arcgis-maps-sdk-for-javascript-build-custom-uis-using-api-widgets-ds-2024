@@ -1,0 +1,22 @@
+html,
+body,
+#viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Avenir Next", "Avenir", "Helvetica Neue", sans-serif;
+}
+
+button i {
+  font-size: 1.5rem;
+}
+
+#environment-container {
+  background-color: var(--bs-light);
+}
+
+#environment-container > *,
+#time-container div {
+  width: 100%;
+}

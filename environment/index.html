@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>2024 Esri Developer Summit - Custom Environment Widget</title>
+
+  <!-- Calcite imports -->
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.6.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.6.0/calcite.css" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- ArcGIS Maps SDK for JavaScript imports -->
+  <script src="https://js.arcgis.com/4.29/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script type="module" src="https://js.arcgis.com/map-components/4.29/arcgis-map-components.esm.js"></script>
+
+  <!-- Demo imports -->
+  <script src="./app.js" defer></script>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="../esri-demo/esri-demo.esm.js"></script>
+
+  <!-- Custom Widget imports -->
+  <script src="./environment.js" type="module"></script>
+  <link rel="stylesheet" href="./environment.css" />
+</head>
+
+<body>
+  <calcite-shell class="calcite-mode-light">
+    <calcite-navigation slot="header" id="nav">
+      <calcite-navigation-logo href="" icon="footprint" alt="Application logo" slot="logo"
+        heading="Custom Environment Widget with Bootstrap styles"
+        description="Esri Developer Summit 2024"></calcite-navigation-logo>
+      <calcite-action-pad layout="horizontal" expand-disabled slot="content-end">
+        <calcite-action id="toggle-modal" text="Custom Widget Code Snippets" icon="code"></calcite-action>
+      </calcite-action-pad>
+      <calcite-tooltip placement="bottom" reference-element="toggle-modal" close-on-click slot="content-end">Widget Code
+        Snippets</calcite-tooltip>
+    </calcite-navigation>
+
+    <!-- Map -->
+    <div id="viewDiv">
+
+      <!-- Environment -->
+      <div id="environment-container" class="card d-flex flex-column mx-0 p-2 shadow rounded-3">
+        <h5 class="card-title border-bottom">Weather</h5>
+        <div id="weather-container" class="d-flex flex-column mb-2">
+          <div class="btn-group mb-2" role="group">
+            <button type="button" class="btn btn-lg btn-outline-warning active" name="sunny" title="Sunny">
+              <i class="bi-sun"></i>
+            </button>
+            <button type="button" class="btn btn-lg btn-outline-secondary" name="cloudy" title="Cloudy">
+              <i class="bi-cloud-sun"></i>
+            </button>
+            <button type="button" class="btn btn-lg btn-outline-primary" name="rainy" title="Rainy">
+              <i class="bi-cloud-rain"></i>
+            </button>
+            <button type="button" class="btn btn-lg btn-outline-info" name="snowy" title="Snowy">
+              <i class="bi-snow"></i>
+            </button>
+            <button type="button" class="btn btn-lg btn-outline-danger" name="foggy" title="Foggy">
+              <i class="bi-cloud-haze"></i>
+            </button>
+          </div>
+          <div class="form-group mb-2">
+            <label class="form-label" for="cloud-input">Cloud cover</label>
+            <input type="range" id="cloud-input" name="cloudCover" class="form-range" min="0" max="1" value="0.5"
+              step="0.1" disabled />
+          </div>
+          <div class="form-group mb-2">
+            <label class="form-label" for="rain-input">Precipitation</label>
+            <input type="range" id="rain-input" name="precipitation" class="form-range" min="0" max="1" value="0.5"
+              step="0.1" disabled />
+          </div>
+          <div class="form-group mb-2">
+            <label class="form-label" for="fog-input">Fog Strength</label>
+            <input type="range" id="fog-input" name="fogStrength" class="form-range" min="0" max="1" value="0.5"
+              step="0.1" disabled />
+          </div>
+        </div>
+        <h5 class="card-title border-bottom">Time of Day</h5>
+        <div id="time-container" class="d-flex mb-2">
+          <div class="form-group d-flex flex-column">
+            <label class="form-label" id="time-label" for="time-input">12:00:00 PM</label>
+            <input type="range" id="time-input" class="form-range pe-2" min="0" max="1440" value="720" step="1" />
+          </div>
+          <button id="play" class="btn btn-primary">
+            <i class="bi-play"></i>
+          </button>
+        </div>
+        <h5 class="card-title border-bottom">Seasons</h5>
+        <div id="seasons-container" class="btn-group mb-2" role="group">
+          <button type="button" id="spring" class="btn btn-md btn-outline-primary" name="spring" title="Spring">
+            Spring
+          </button>
+          <button type="button" id="summer" class="btn btn-md btn-outline-primary" name="summer" title="Summer">
+            Summer
+          </button>
+          <button type="button" id="fall" class="btn btn-md btn-outline-primary" name="fall" title="Fall">
+            Fall
+          </button>
+          <button type="button" id="winter" class="btn btn-md btn-outline-primary" name="winter" title="Winter">
+            Winter
+          </button>
+        </div>
+      </div>
+    </div>
+  </calcite-shell>
+
+  <!-- Demo template interactive elements -->
+  <calcite-modal id="modal" width-scale="l" class="calcite-mode-light">
+    <div slot="header">Custom Widget Code Snippets</div>
+    <div slot="content">
+      <calcite-accordion selection-mode="single" scale="l">
+        <calcite-accordion-item heading="1. Create Bootstrap HTML"
+          description="Set up the DOM using HTML elements and bootstrap styles" icon-start="code">
+          <esri-demo-code language="html" source="<!-- Example Bootstrap styles -->
+<div id=&quot;viewDiv&quot;>
+  <!-- Use Bootstrap flex and spacing utility classes -->
+  <div id=&quot;environment-container&quot; class=&quot;card d-flex flex-column mx-0 p-2 shadow rounded-3&quot;>
+    <h5 class=&quot;card-title border-bottom&quot;>Weather</h5>
+    <div id=&quot;weather-container&quot; class=&quot;d-flex flex-column mb-2&quot;>
+      <!-- Use Bootstrap 'btn' classes -->
+      <div class=&quot;btn-group mb-2&quot; role=&quot;group&quot;>
+        <button type=&quot;button&quot; class=&quot;btn btn-lg btn-outline-warning active&quot; name=&quot;sunny&quot; title=&quot;Sunny&quot;>
+          <!-- Use Bootstrap Icons -->
+          <i class=&quot;bi-sun&quot;></i>
+        </button>
+        <!-- Additional buttons -->
+      </div>
+      <!-- Use Bootstrap form and input classes -->
+      <div class=&quot;form-group mb-2&quot;>
+        <label class=&quot;form-label&quot; for=&quot;cloud-input&quot;>Cloud cover</label>
+        <input type=&quot;range&quot; id=&quot;cloud-input&quot; name=&quot;cloudCover&quot; 
+            class=&quot;form-range&quot; min=&quot;0&quot; max=&quot;1&quot; value=&quot;0.5&quot; step=&quot;0.1&quot; disabled />
+      </div>
+      <!-- Additional containers -->
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="2. Import required modules." description="Setting up app components."
+          icon-start="recurrence">
+          <esri-demo-code language="js" source="require([
+  &quot;esri/WebScene&quot;,
+  &quot;esri/core/reactiveUtils&quot;,
+  &quot;esri/views/SceneView&quot;,
+
+  &quot;esri/widgets/Daylight/DaylightViewModel&quot;,
+  &quot;esri/widgets/Weather/WeatherViewModel&quot;,
+], function(
+  WebScene,
+  reactiveUtils,
+  SceneView,
+
+  DaylightViewModel,
+  WeatherViewModel,
+) {
+
+  // App code goes here.
+
+});
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="3. Set up Scene, SceneView and ViewModels"
+          description="Setting up app components." icon-start="recurrence">
+          <esri-demo-code language="js" source="const scene = new WebScene({
+  portalItem: {
+    id: &quot;6358da611a9342dbba1ec22ffcdaf62a&quot;
+  }
+});
+
+const view = new SceneView({
+  map: scene,
+  timeZone: &quot;America/New_York&quot;,
+  container: &quot;viewDiv&quot;,
+  environment: {
+    lighting: {
+      type: &quot;sun&quot;,
+      cameraTrackingEnabled: false,
+      directShadowsEnabled: true
+    }
+  }
+});
+
+const daylightVM = new DaylightViewModel({ view });
+
+const weatherVM = new WeatherViewModel({ view });
+
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="4. Wire up buttons and inputs to change weather settings"
+          description="Set up event handlers to interact with WeatherViewModel and SceneView" icon-start="serial-port">
+          <esri-demo-code language="js" source="// Weather UI elements
+const weatherContainer = document.getElementById(&quot;weather-container&quot;);
+const weatherButtons = weatherContainer.querySelectorAll(&quot;button&quot;);
+const weatherSettingsInputs = weatherContainer.querySelectorAll(&quot;input&quot;);
+
+// Add &quot;click&quot; event listeners for each weather button.
+weatherButtons.forEach((button) => (button.onclick = () => onWeatherButtonClick(button)));
+
+// Update the view's current weather using WeatherViewModel utility method.
+function onWeatherButtonClick(button) {
+  weatherVM.setWeatherByType(button.name);
+}
+
+// Add &quot;input&quot; event listeners for each weather input.
+weatherSettingsInputs.forEach((input) => {
+  input.addEventListener(&quot;input&quot;, (event) => onWeatherInputChange(event.target))
+});
+
+// Sync the current weather settings when an input changes.
+function onWeatherInputChange(input) {
+  view.environment.weather[input.name] = parseFloat(input.value);
+}
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="5. Wire up buttons and input to change the time of day"
+          description="Set up event handlers to interact with DaylightViewModel" icon-start="serial-port">
+          <esri-demo-code language="js" source="// Daylight UI elements
+const timeInput = document.getElementById(&quot;time-input&quot;);
+const playButton = document.getElementById(&quot;play&quot;);
+
+// Associated HTML element
+// <input type=&quot;range&quot; min=&quot;0&quot; max=&quot;1440&quot; value=&quot;720&quot; step=&quot;1&quot; />
+
+// Add &quot;input&quot; event listener to the time 'range input'.
+timeInput.addEventListener(&quot;input&quot;, (event) => onTimeInputChange(event.target));
+
+// Adjust the view's current time using DaylightViewModel.
+// This is typically activated whenever 'timeInput' changes.
+// Current value of the input represents &quot;minutes since midnight&quot;.
+function onTimeInputChange(input) {
+  daylightVM.timeSliderPosition = parseFloat(input.value);
+}
+
+// Add &quot;click&quot; event listener to toggle time animation.
+playButton.onclick = () => animateTimeChange();
+
+// Activate time animation using DaylightViewModel.
+function animateTimeChange() {
+  daylightVM.dayPlaying = !daylightVM.dayPlaying;
+}
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="6. Wire up buttons and input to change the season"
+          description="Set up event handlers to interact with DaylightViewModel" icon-start="serial-port">
+          <esri-demo-code language="js" source="// Seasons UI elements
+const seasonsContainer = document.getElementById(&quot;seasons-container&quot;);
+const seasonsButtons = seasonsContainer.querySelectorAll(&quot;button&quot;);
+
+// Associated HTML element
+// <button type=&quot;button&quot; id=&quot;summer&quot; name=&quot;summer&quot;>Summer</button>
+
+// Add &quot;click&quot; event listeners for each season button.
+seasonsButtons.forEach((button) => button.onclick = () => onSeasonsButtonClick(button));
+
+// Update the view's season via DaylightViewModel.
+function onSeasonsButtonClick(button) {
+  daylightVM.currentSeason = button.name;
+}
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="7. Listen for changes to the view's environment"
+          description="Update UI based on current weather settings" icon-start="sound">
+          <esri-demo-code language="js" source="// Update 'current time' label based on environment time.
+reactiveUtils.watch(
+  () => view.environment.lighting.date,
+  (date) => {
+    // Ensures the time displayed in the UI reflects the data's 
+    // timeZone instead of the browser's current timeZone.
+    const label = date.toLocaleTimeString('en-US', { timeZone: view.timeZone });
+
+    document.getElementById(&quot;time-label&quot;).textContent = label;
+  }
+);
+
+// Update UI elements based on changes to the current weather settings.
+reactiveUtils.watch(
+  () => view.environment.weather,
+  (weather) => {
+    // Ensure only the associated button appears active.
+    weatherButtons.forEach((button) => button.classList.toggle(&quot;active&quot;, button.name === weather.type));
+    
+    // Update inputs depending on if the associated setting is relevant to the current weather type.
+    weatherSettingsInputs.forEach((input) => {
+      const supports = input.name in weather;
+
+      // Adds 'disabled' attribute if the associated setting is not supported.
+      // Reset 'value' back to app default if setting is not supported.
+      input.toggleAttribute(&quot;disabled&quot;, !supports);
+      input.value = supports ? weather[input.name] : 0.5;
+    });
+  }, 
+  // Ensure this watcher runs immediately.
+  { initial: true }
+);
+"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="8. Listen for changes to DaylightViewModel."
+          description="More UI updates based on current weather settings" icon-start="sound">
+          <esri-demo-code language="js" source="// Sync HTML range input with expected position when animating.
+reactiveUtils.watch(
+  () => daylightVM.timeSliderPosition, 
+  (value) => {
+    // Avoid update if input element is already in sync with DaylightViewModel.
+    // Ensure proper data types are compared; 'timeInput.value' is a string.
+    if (timeInput.value !== value.toString()) {
+      timeInput.value = value;
+    }
+  }
+);
+
+// Update icon based on DaylightViewModel animating.
+reactiveUtils.watch(
+  () => daylightVM.dayPlaying, 
+  (playing) => {
+    const iconNode = playButton.firstElementChild;
+
+    // Show either &quot;play&quot; or &quot;pause&quot; icon depending on animation state.
+    iconNode.classList.toggle(&quot;bi-play&quot;, !playing);
+    iconNode.classList.toggle(&quot;bi-pause&quot;, playing);
+  }
+);"></esri-demo-code>
+        </calcite-accordion-item>
+        <calcite-accordion-item heading="9. Application CSS" description="Minor changes for alignment."
+          icon-start="palette">
+          <esri-demo-code language="css" source="html,
+body,
+#viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+button i {
+  font-size: 1.5rem;
+}
+
+#environment-container {
+  background-color: var(--bs-light);
+}
+
+#environment-container > *,
+#time-container div {
+  width: 100%;
+}
+"></esri-demo-code>
+        </calcite-accordion-item>
+      </calcite-accordion>
+    </div>
+  </calcite-modal>
+
+</body>
+
+</html>
