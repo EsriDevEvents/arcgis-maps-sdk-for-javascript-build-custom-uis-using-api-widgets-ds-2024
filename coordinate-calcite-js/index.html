@@ -70,6 +70,7 @@
   });
 
   const customWidget = document.createElement(&quot;div&quot;);
+  // create the Calcite HTML
   customWidget.innerHTML = `
     &lt;div class=&quot;custom-coordinate-conversion&quot;&gt;
 
@@ -96,7 +97,7 @@
 watch(
   () =&gt; vm.conversions.getItemAt(0)?.format,
   (format) =&gt; updateFormats(format),
-  { initial: true }
+  { initial: true } // initial: true will trigger the callback immediately
 );
 watch(
   () =&gt; vm.conversions.getItemAt(0)?.displayCoordinate,
@@ -120,10 +121,10 @@ function updateCoordinates(activeDisplayCoordinate) {
 
 coordinateSelect.addEventListener(&quot;calciteSelectChange&quot;, (event) =&gt; {
   const value = event.target.value;
-  const format = vm.formats.find((format) =&gt; format.name === value);
-  const newConversion = new Conversion({ format });
+  const format = vm.formats.find((format) =&gt; format.name === value); // find new format
+  const newConversion = new Conversion({ format }); // create new conversion
   vm.conversions.removeAt(0);
-  vm.conversions.add(newConversion, 0);
+  vm.conversions.add(newConversion, 0); // place conversion at the top
 });
 
 coordinateMode.addEventListener(&quot;calciteSegmentedControlChange&quot;, (event) =&gt; {
@@ -132,13 +133,15 @@ coordinateMode.addEventListener(&quot;calciteSegmentedControlChange&quot;, (even
         </calcite-accordion-item>
         <calcite-accordion-item heading="4. Capturing a point"
           description="Calling a ViewModel method and navigating to the returned point" icon-start="pin">
-          <esri-demo-code language="js" source="coordinateEditable.addEventListener(
+          <esri-demo-code language="js" source="// when inline editable is changed
+coordinateEditable.addEventListener(
   &quot;calciteInlineEditableEditConfirm&quot;,
   () =&gt; {
     reverseConvert();
   }
 );
 
+// convert string coordinate to map point
 async function reverseConvert() {
   coordinateEditable.editingEnabled = false;
   const value = coordinateInput.value;
@@ -146,7 +149,7 @@ async function reverseConvert() {
     const point = await vm.reverseConvert(value, activeFormat);
     vm.view.goTo(point);
   } catch (e) {
-    coordinateInput.status = &quot;invalid&quot;;
+    coordinateInput.status = &quot;invalid&quot;; // set inline editable to invalid
   }
 }"></esri-demo-code>
         </calcite-accordion-item>

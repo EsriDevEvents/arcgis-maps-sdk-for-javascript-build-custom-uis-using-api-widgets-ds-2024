@@ -56,7 +56,7 @@
 import { useMapView } from &quot;./hooks/useMapView&quot;;
 import { useCoordinateConversionVM } from &quot;./hooks/useCoordinateConversionVM&quot;;
 
-// component to handle the Fluent UI coordinate conversion
+// new Fluent UI coordinate component being created
 import FluentCoordinateConversion from &quot;./components/FluentCoordinateConversion&quot;;
 
 function App() {
@@ -96,6 +96,7 @@ export function useActiveDisplayCoordinate(vm) {
 
   useEffect(() =&gt; {
     const handle = watch(
+      // watch the displayCoordinate property on the first conversion
       () =&gt; vm?.conversions?.getItemAt(0)?.displayCoordinate,
       (displayCoordinate) =&gt;
         setActiveDisplayCoordinate(displayCoordinate ?? &quot;&quot;),
